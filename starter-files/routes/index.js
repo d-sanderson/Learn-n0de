@@ -8,7 +8,6 @@ const storeController = require('../controllers/storeController')
 router.get('/', (req,res) => {
   res.render('hello', {
     name: 'David',
-    dog: req.query.dog
   });
 });
 

@@ -18,7 +18,7 @@ exports.staticMap = ([lng, lat]) => `https://maps.googleapis.com/maps/api/static
 exports.icon = (name) => fs.readFileSync(`./public/images/icons/${name}.svg`);
 
 // Some details about the site
-exports.siteName = `DAvid Wuz here Now That's Delicious!`;
+exports.siteName = `Now That's Delicious!`;
 
 exports.menu = [
   { slug: '/stores', title: 'Stores', icon: 'store', },

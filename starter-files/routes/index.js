@@ -13,10 +13,8 @@ router.get('/add', storeController.addStore);
 // since the createStore method uses async await we have to wrap it with a higher order function which catches any errors if the post is unsucessfull
 // this way we don't have to add try catch blogs to each controller method. 
 router.post('/add', catchErrors(storeController.createStore));
+router.post('/add/:id', catchErrors(storeController.updateStore));
 
-router.get('/reverse/:name', (req, res) => {
-  const reverse = [...req.params.name].reverse().join('');
-res.send(reverse);
-});
+router.get('/stores/:id/edit', catchErrors(storeController.editStore));
 
 module.exports = router;

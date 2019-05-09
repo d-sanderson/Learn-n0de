@@ -41,6 +41,7 @@ exports.resize = async (req, res, next) => {
   // once we have written the photo to our file system, keep going!
   next();
 }
+
 exports.createStore = async (req, res) => {
   const store = await (new Store(req.body)).save();;
   req.flash('success', `Successfully Created ${store.name}. Care to leave a review?`);
@@ -53,6 +54,7 @@ exports.getStores = async (req, res) => {
   // 2. Pass data to the template
   res.render('stores', { title: 'Stores', stores});
 };
+
 exports.editStore = async (req, res) => {
   // 1. Find the store given the id
   const store =  await Store.findOne({ _id: req.params.id });
@@ -77,6 +79,7 @@ exports.updateStore = async (req, res) => {
   req.flash('success', `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store →</a>`);
   res.redirect(`/stores/${store._id}/edit`);
 };
+
 exports.getStoreBySlug = async (req, res, next) => {
   const store = await Store.findOne({ slug: req.params.slug })
   if(!store) return next();
@@ -84,7 +87,10 @@ exports.getStoreBySlug = async (req, res, next) => {
 };
 
 exports.getStoresByTag = async (req, res) => {
-  const tags = await Store.getTagsList();
   const tag = req.params.tag
-  res.render('tag', { tags, tag, title: 'Tags' })
+  const tagQuery = tag || { $exists: true };
+  const tagsPromise = Store.getTagsList();
+  const storesPromise = Store.find({ tags: tagQuery  });
+  const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
+  res.render('tag', { tags, tag, title: 'Tags', stores })
 }

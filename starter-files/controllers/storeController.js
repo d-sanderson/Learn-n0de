@@ -53,13 +53,12 @@ exports.getStores = async (req, res) => {
   // 2. Pass data to the template
   res.render('stores', { title: 'Stores', stores});
 };
-
 exports.editStore = async (req, res) => {
   // 1. Find the store given the id
   const store =  await Store.findOne({ _id: req.params.id });
 
   // 2. Confirm they are the owner of that store
-  //  TODO
+  //  Todo:
   // 3. Render out the edit form so the user can update their store
   res.render('editStore', { title: `Edit ${store.name}`, store});
 };
@@ -78,9 +77,14 @@ exports.updateStore = async (req, res) => {
   req.flash('success', `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store →</a>`);
   res.redirect(`/stores/${store._id}/edit`);
 };
-
 exports.getStoreBySlug = async (req, res, next) => {
   const store = await Store.findOne({ slug: req.params.slug })
   if(!store) return next();
   res.render('store', {store, title: store.name})
 };
+
+exports.getStoresByTag = async (req, res) => {
+  const tags = await Store.getTagsList();
+  const tag = req.params.tag
+  res.render('tag', { tags, tag, title: 'Tags' })
+}

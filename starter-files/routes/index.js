@@ -11,7 +11,7 @@ const { catchErrors } = require('../handlers/errorHandlers')
 
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
-router.get('/add', storeController.addStore);
+router.get('/add', authController.isLoggedIn, storeController.addStore);
 // since the createStore method uses async await we have to wrap it with a higher order function which catches any errors if the post is unsucessfull
 // this way we don't have to add try catch blogs to each controller method.
 
@@ -31,14 +31,20 @@ router.get('/tags', catchErrors(storeController.getStoresByTag))
 router.get('/tags/:tag', catchErrors(storeController.getStoresByTag))
 
 router.get('/login', userController.loginForm)
+router.post('/login', authController.login)
+router.get('/logout', authController.logout);
 router.get('/register',userController.registerForm);
 
-// 1. Validate Registration data.
-// 2. register the user.
-// 3. log them in
+
+
+
 router.post('/register',
+// 1. Validate Registration data.
 userController.validateRegister,
+// 2. register the user.
 userController.register,
+// 3. log them in
 authController.login
 );
+
 module.exports = router;
